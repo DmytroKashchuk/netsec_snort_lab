@@ -1,0 +1,12 @@
+#syn flood
+alert tcp any any -> $HOME_NET ANY (flags: S; msg:"TCP SYN FLOOD"; flow: stateless; detection_filter: track by_dst, count 100, seconds 10;)
+
+#sql injection
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (msg:"NII
+SQL Injection - Paranoid"; flow:to_server,established;uricontent:".pl";pcre:"/(\%27)|
+(\')|(\-\-)|(%23)|(#)/i"; classtype:web-application-attack; sid:9099; rev:5;)
+
+#xss
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (msg:"NII
+Cross-site scripting attempt"; flow:to_server,established; pcre:"/((\%3C)|<)((\%2F)|\/)*
+[a-z0-9\%]+((\%3E)|>)/i"; classtype:web-application-attack; sid:9000; rev:5;)
